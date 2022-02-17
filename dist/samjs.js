@@ -172,7 +172,7 @@
     write(Uint32ToUint8Array(audiobuffer.length)); // buffer length
 
     write(audiobuffer);
-    return audiobuffer;
+    return realbuffer;
   };
   /**
    *
