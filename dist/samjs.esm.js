@@ -166,6 +166,7 @@ let BufferToWav = audiobuffer => {
   write(Uint32ToUint8Array(audiobuffer.length)); // buffer length
 
   write(audiobuffer);
+  return audiobuffer;
 };
 /**
  *
@@ -3164,7 +3165,7 @@ function SamJs(options) {
 
 
   this.renderwav = (text, phonetic) => {
-    return BufferToWav(ensurePhonetic(text, phonetic));
+    return BufferToWav(this.buf8(text, phonetic));
   };
 }
 
