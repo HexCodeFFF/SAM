@@ -12,7 +12,7 @@ const Play = (context, audiobuffer) => {
     let source = context.createBufferSource();
     let soundBuffer = context.createBuffer(1, audiobuffer.length, 22050);
     let buffer = soundBuffer.getChannelData(0);
-    for(let i=0; i<audiobuffer.length; i++) {
+    for (let i = 0; i < audiobuffer.length; i++) {
       buffer[i] = audiobuffer[i];
     }
     source.buffer = soundBuffer;
@@ -57,7 +57,7 @@ export const PlayBuffer = (audiobuffer) => {
  */
 export const UInt8ArrayToFloat32Array = (buffer) => {
   const audio = new Float32Array(buffer.length);
-  for(let i=0; i < buffer.length; i++) {
+  for (let i = 0; i < buffer.length; i++) {
     audio[i] = (buffer[i] - 128) / 256;
   }
 
@@ -68,11 +68,9 @@ export const UInt8ArrayToFloat32Array = (buffer) => {
  *
  * @param {Uint8Array} audiobuffer
  *
- * @return void
+ * @return Uint8Array
  */
-export const RenderBuffer = (audiobuffer) => {
-  let filename = 'sam.wav';
-
+export const BufferToWav = (audiobuffer) => {
   // Calculate buffer size.
   const realbuffer = new Uint8Array(
     4 + // "RIFF"
@@ -91,10 +89,10 @@ export const RenderBuffer = (audiobuffer) => {
     audiobuffer.length
   );
 
-  let pos=0;
+  let pos = 0;
   const write = (buffer) => {
     realbuffer.set(buffer, pos);
-    pos+=buffer.length;
+    pos += buffer.length;
   };
 
   //RIFF header
@@ -114,15 +112,27 @@ export const RenderBuffer = (audiobuffer) => {
   write(text2Uint8Array('data'));
   write(Uint32ToUint8Array(audiobuffer.length)); // buffer length
   write(audiobuffer);
+}
+
+/**
+ *
+ * @param {Uint8Array} audiobuffer
+ *
+ * @return void
+ */
+export const RenderBuffer = (audiobuffer) => {
+  let filename = 'sam.wav';
+
+  let realbuffer = BufferToWav(audiobuffer)
 
   const blob = new Blob([realbuffer], {type: 'audio/vnd.wave'});
 
-  const url     = (window.URL || window.webkitURL);
+  const url = (window.URL || window.webkitURL);
   const fileURL = url.createObjectURL(blob);
-  const a       = document.createElement('a');
-  a.href        = fileURL;
-  a.target      = '_blank';
-  a.download    = filename;
+  const a = document.createElement('a');
+  a.href = fileURL;
+  a.target = '_blank';
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

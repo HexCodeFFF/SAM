@@ -1,10 +1,11 @@
-import {PlayBuffer, RenderBuffer} from './util/player.es6'
+import {PlayBuffer, RenderBuffer, BufferToWav} from './util/player.es6'
 import TextToPhonemes from './reciter/reciter.es6';
 import {SamProcess, SamBuffer} from './sam/sam.es6';
 
 const convert = TextToPhonemes;
 const buf8 = SamProcess;
 const buf32 = SamBuffer;
+const renderwav = BufferToWav;
 
 /**
  * @param {object}  [options]
@@ -75,10 +76,23 @@ function SamJs (options) {
   this.download = (text, phonetic) => {
     RenderBuffer(this.buf8(text, phonetic));
   }
+
+  /**
+   * Render the passed text as 8bit wave buffer array with wav headers
+   *
+   * @param {string}  text       The text to render or phoneme string.
+   * @param {boolean} [phonetic] Flag if the input text is already phonetic data.
+   *
+   * @return {Uint8Array}
+   */
+  this.renderwav = (text, phonetic) => {
+    return BufferToWav(ensurePhonetic(text, phonetic));
+  }
 }
 
 SamJs.buf8 = buf8;
 SamJs.buf32 = buf32;
 SamJs.convert = convert;
+SamJs.renderwav = renderwav;
 
 export default SamJs;
