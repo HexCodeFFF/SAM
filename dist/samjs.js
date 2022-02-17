@@ -118,12 +118,11 @@
    *
    * @param {Uint8Array} audiobuffer
    *
-   * @return void
+   * @return Uint8Array
    */
 
-  let RenderBuffer = audiobuffer => {
-    let filename = 'sam.wav'; // Calculate buffer size.
-
+  let BufferToWav = audiobuffer => {
+    // Calculate buffer size.
     let realbuffer = new Uint8Array(4 + // "RIFF"
     4 + // uint32 filesize
     4 + // "WAVE"
@@ -173,6 +172,17 @@
     write(Uint32ToUint8Array(audiobuffer.length)); // buffer length
 
     write(audiobuffer);
+  };
+  /**
+   *
+   * @param {Uint8Array} audiobuffer
+   *
+   * @return void
+   */
+
+  let RenderBuffer = audiobuffer => {
+    let filename = 'sam.wav';
+    let realbuffer = BufferToWav(audiobuffer);
     let blob = new Blob([realbuffer], {
       type: 'audio/vnd.wave'
     });
@@ -3073,6 +3083,7 @@
   let convert = TextToPhonemes;
   let buf8 = SamProcess;
   let buf32 = SamBuffer;
+  let renderwav = BufferToWav;
   /**
    * @param {object}  [options]
    * @param {Boolean} [options.phonetic] Default false.
@@ -3148,11 +3159,25 @@
     this.download = (text, phonetic) => {
       RenderBuffer(this.buf8(text, phonetic));
     };
+    /**
+     * Render the passed text as 8bit wave buffer array with wav headers
+     *
+     * @param {string}  text       The text to render or phoneme string.
+     * @param {boolean} [phonetic] Flag if the input text is already phonetic data.
+     *
+     * @return {Uint8Array}
+     */
+
+
+    this.renderwav = (text, phonetic) => {
+      return BufferToWav(ensurePhonetic(text, phonetic));
+    };
   }
 
   SamJs.buf8 = buf8;
   SamJs.buf32 = buf32;
   SamJs.convert = convert;
+  SamJs.renderwav = renderwav;
 
   return SamJs;
 
