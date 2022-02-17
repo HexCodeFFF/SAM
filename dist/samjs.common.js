@@ -290,12 +290,18 @@ let FLAG_CONSONANT$1 = 0x20; // FIXME: is this correct?
 let FLAG_VOWEL_OR_Y = 0x40;
 let FLAG_ALPHA_OR_QUOT = 0x80;
 
+const {
+  ToWords
+} = require('to-words');
+
+let cmudict = require('@stdlib/datasets-cmudict')();
 /**
  * Test if the char matches against the flags in the reciter table.
  * @param {string} c
  * @param {Number} flg
  * @return {boolean}
  */
+
 
 let flags = (c, flg) => {
   return (charFlags[c] & flg) !== 0;
@@ -584,76 +590,137 @@ rules$1.split('|').map(rule => {
   rules[c].push(r);
 });
 let rules2 = rules2$1.split('|').map(reciterRule);
+
+function ttpclassic(input) {
+  let text = ' ' + input.toUpperCase();
+  let inputPos = 0,
+      output = '';
+  /**
+   * The input callback (successCallback) used from the rules.
+   *
+   * @param {string} append    The string to append.
+   * @param {Number} inputSkip The amount or chars to move ahead in the input.
+   */
+
+  let successCallback = (append, inputSkip) => {
+    inputPos += inputSkip;
+    output += append;
+  };
+
+  let c = 0;
+
+  while (inputPos < text.length && c++ < 10000) {
+    {
+      let tmp = text.toLowerCase();
+      console.log("processing \"".concat(tmp.substr(0, inputPos), "%c").concat(tmp[inputPos].toUpperCase(), "%c").concat(tmp.substr(inputPos + 1), "\""), 'color: red;', 'color:normal;');
+    }
+
+    let currentChar = text[inputPos]; // NOT '.' or '.' followed by number.
+
+    if (currentChar !== '.' || flagsAt(text, inputPos + 1, FLAG_NUMERIC)) {
+      //pos36607:
+      if (flags(currentChar, FLAG_RULESET2)) {
+        rules2.some(rule => {
+          return rule(text, inputPos, successCallback);
+        });
+        continue;
+      } //pos36630:
+
+
+      if (charFlags[currentChar] !== 0) {
+        // pos36677:
+        if (!flags(currentChar, FLAG_ALPHA_OR_QUOT)) {
+          //36683: BRK
+          return false;
+        } // go to the right rules for this character.
+
+
+        rules[currentChar].some(rule => {
+          return rule(text, inputPos, successCallback);
+        });
+        continue;
+      }
+
+      output += ' ';
+      inputPos++;
+      continue;
+    }
+
+    output += '.';
+    inputPos++;
+  }
+
+  return output;
+}
+/**
+ * @param {Object} object
+ * @param {string} key
+ * @return {any} value
+ */
+
+
+function getParameterCaseInsensitive(object, key) {
+  return object[Object.keys(object).find(k => k.toLowerCase() === key.toLowerCase())];
+}
+
+function isNumeric(str) {
+  if (typeof str != "string") return false; // we only process strings!
+
+  return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+  !isNaN(parseFloat(str)); // ...and ensure strings of whitespace fail
+}
+
+function cmudictparse(words) {
+  console.log("using CMUdict to translate text to phonemes."); // how to convert CMU stresses (main, secondary, none) to SAM stress http://www.retrobits.net/atari/sam.shtml#ch2.0
+
+  let stresses = ["4", "", ""];
+  let out = []; // split nicely
+
+  let re = /([\w']+|[\d-.]+|[^\w\d\s]+)/g;
+  [...words.matchAll(re)].forEach(word => {
+    word = word[0].trim(); // check cmudict
+
+    let proc = getParameterCaseInsensitive(cmudict["dict"], word);
+
+    if (proc === undefined) {
+      // if its a number
+      if (isNumeric(word)) {
+        // parse to words and try again
+        let toWords = new ToWords();
+        out.push(cmudictparse(toWords.convert(parseFloat(word))));
+      } else {
+        // if not found, use classic mode/let sam guess
+        out.push(ttpclassic(word).trim());
+      }
+    } else {
+      // if it is found
+      out.push(proc // discrepancies between CMU and SAM
+      .replace(/HH/gi, "/H").replace(/JH/gi, "J") // replace whitespace
+      .replace(/\s/ig, "") // convert stresses
+      .replace(/0/g, stresses[2]).replace(/1/g, stresses[0]).replace(/2/g, stresses[1]));
+    }
+  });
+  console.log(out);
+  return out.join(" ");
+}
 /**
  * Convert the text to a phoneme string.
  *
  * @param {string} input The input string to convert.
  *
+ * @param {boolean} moderncmu if true, use modern CMU dictionary approach
  * @return {boolean|string}
  */
 
-let TextToPhonemes = input => {
-  return (() => {
-    let text = ' ' + input.toUpperCase();
-    let inputPos = 0,
-        output = '';
-    /**
-     * The input callback (successCallback) used from the rules.
-     *
-     * @param {string} append    The string to append.
-     * @param {Number} inputSkip The amount or chars to move ahead in the input.
-     */
 
-    let successCallback = (append, inputSkip) => {
-      inputPos += inputSkip;
-      output += append;
-    };
+let TextToPhonemes = function (input) {
+  let moderncmu = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-    let c = 0;
-
-    while (inputPos < text.length && c++ < 10000) {
-      {
-        let tmp = text.toLowerCase();
-        console.log("processing \"".concat(tmp.substr(0, inputPos), "%c").concat(tmp[inputPos].toUpperCase(), "%c").concat(tmp.substr(inputPos + 1), "\""), 'color: red;', 'color:normal;');
-      }
-
-      let currentChar = text[inputPos]; // NOT '.' or '.' followed by number.
-
-      if (currentChar !== '.' || flagsAt(text, inputPos + 1, FLAG_NUMERIC)) {
-        //pos36607:
-        if (flags(currentChar, FLAG_RULESET2)) {
-          rules2.some(rule => {
-            return rule(text, inputPos, successCallback);
-          });
-          continue;
-        } //pos36630:
-
-
-        if (charFlags[currentChar] !== 0) {
-          // pos36677:
-          if (!flags(currentChar, FLAG_ALPHA_OR_QUOT)) {
-            //36683: BRK
-            return false;
-          } // go to the right rules for this character.
-
-
-          rules[currentChar].some(rule => {
-            return rule(text, inputPos, successCallback);
-          });
-          continue;
-        }
-
-        output += ' ';
-        inputPos++;
-        continue;
-      }
-
-      output += '.';
-      inputPos++;
-    }
-
-    return output;
-  })();
+  if (moderncmu) {
+    return cmudictparse(input);
+  } else {
+    return ttpclassic(input);
+  }
 };
 
 let BREAK = 254;
@@ -3083,13 +3150,14 @@ let buf32 = SamBuffer;
 let renderwav = BufferToWav;
 /**
  * @param {object}  [options]
- * @param {Boolean} [options.phonetic] Default false.
- * @param {Boolean} [options.singmode] Default false.
- * @param {Boolean} [options.debug]    Default false.
- * @param {Number}  [options.pitch]    Default 64.
- * @param {Number}  [options.speed]    Default 72.
- * @param {Number}  [options.mouth]    Default 128.
- * @param {Number}  [options.throat]   Default 128.
+ * @param {Boolean} [options.phonetic]  Default false.
+ * @param {Boolean} [options.singmode]  Default false.
+ * @param {Boolean} [options.moderncmu] Default false.
+ * @param {Boolean} [options.debug]     Default false.
+ * @param {Number}  [options.pitch]     Default 64.
+ * @param {Number}  [options.speed]     Default 72.
+ * @param {Number}  [options.mouth]     Default 128.
+ * @param {Number}  [options.throat]    Default 128.
  *
  * @constructor
  */
@@ -3099,7 +3167,7 @@ function SamJs(options) {
 
   let ensurePhonetic = (text, phonetic) => {
     if (!(phonetic || opts.phonetic)) {
-      return convert(text);
+      return convert(text, opts.moderncmu);
     }
 
     return text.toUpperCase();

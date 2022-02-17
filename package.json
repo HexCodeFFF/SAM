@@ -22,7 +22,10 @@
     "test-browser": "karma start",
     "test-browser2": "karma start --single-run"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@stdlib/datasets-cmudict": "^0.0.8",
+    "to-words": "^3.1.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.5",
     "@babel/plugin-transform-runtime": "^7.16.5",

@@ -9,13 +9,14 @@ const renderwav = BufferToWav;
 
 /**
  * @param {object}  [options]
- * @param {Boolean} [options.phonetic] Default false.
- * @param {Boolean} [options.singmode] Default false.
- * @param {Boolean} [options.debug]    Default false.
- * @param {Number}  [options.pitch]    Default 64.
- * @param {Number}  [options.speed]    Default 72.
- * @param {Number}  [options.mouth]    Default 128.
- * @param {Number}  [options.throat]   Default 128.
+ * @param {Boolean} [options.phonetic]  Default false.
+ * @param {Boolean} [options.singmode]  Default false.
+ * @param {Boolean} [options.moderncmu] Default false.
+ * @param {Boolean} [options.debug]     Default false.
+ * @param {Number}  [options.pitch]     Default 64.
+ * @param {Number}  [options.speed]     Default 72.
+ * @param {Number}  [options.mouth]     Default 128.
+ * @param {Number}  [options.throat]    Default 128.
  *
  * @constructor
  */
@@ -24,7 +25,7 @@ function SamJs (options) {
 
   const ensurePhonetic = (text, phonetic) => {
     if (!(phonetic || opts.phonetic)) {
-      return convert(text);
+      return convert(text, opts.moderncmu);
     }
     return text.toUpperCase();
   }
