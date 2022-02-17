@@ -86,7 +86,7 @@ function SamJs (options) {
    * @return {Uint8Array}
    */
   this.renderwav = (text, phonetic) => {
-    return BufferToWav(ensurePhonetic(text, phonetic));
+    return BufferToWav(this.buf8(text, phonetic));
   }
 }
 
