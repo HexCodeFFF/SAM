@@ -10,8 +10,9 @@ off [discordier's SAM JS port](https://github.com/discordier/sam)
 ## why?
 
 I wanted to incorporate SAM into my discord
-bot, [MediaForge](https://github.com/HexCodeFFF/mediaforge), but the C
-ports are too limiting as they're essentially
+bot, [MediaForge](https://github.com/HexCodeFFF/mediaforge), 
+but the [C ports](https://github.com/s-macke/SAM) are too limiting as
+they're essentially
 instruction-for-instruction clones of software from the 80s: i.e. memory
 limits everywhere. discordier's JS port has no such limitations, but
 also didn't have everything I wanted it to. hence: this project which is
