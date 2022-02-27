@@ -1511,10 +1511,9 @@
   resolved "https://registry.yarnpkg.com/@stdlib/constants-uint8-max/-/constants-uint8-max-0.0.7.tgz#d50affeaeb6e67a0f39059a8f5122f3fd5ff4447"
   integrity sha512-fqV+xds4jgwFxwWu08b8xDuIoW6/D4/1dtEjZ1sXVeWR7nf0pjj1cHERq4kdkYxsvOGu+rjoR3MbjzpFc4fvSw==
 
-"@stdlib/datasets-cmudict@^0.0.8":
+"@stdlib/datasets-cmudict@https://github.com/HexCodeFFF/datasets-cmudict":
   version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@stdlib/datasets-cmudict/-/datasets-cmudict-0.0.8.tgz#c99c0554202e82d4237e1517c0b58413b14f7f0a"
-  integrity sha512-/5tL0AAg1M2hfp0GTpI3e1pQHpT7SQQZm6hhXSYavhenvYsJjPHH3Z4mfkF7bKpWVzO1MJ0cFTEqwQDIBqgCgQ==
+  resolved "https://github.com/HexCodeFFF/datasets-cmudict#e43d8043d118a329e7254c16154d06a329aa0b81"
   dependencies:
     "@stdlib/assert-has-own-property" "^0.0.x"
     "@stdlib/assert-is-plain-object" "^0.0.x"
