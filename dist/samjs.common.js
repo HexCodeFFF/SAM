@@ -294,7 +294,7 @@ const {
   ToWords
 } = require('to-words');
 
-let cmudict = require('@stdlib/datasets-cmudict')();
+let cmudict = require('cmudict')();
 /**
  * Test if the char matches against the flags in the reciter table.
  * @param {string} c

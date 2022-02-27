@@ -1511,21 +1511,6 @@
   resolved "https://registry.yarnpkg.com/@stdlib/constants-uint8-max/-/constants-uint8-max-0.0.7.tgz#d50affeaeb6e67a0f39059a8f5122f3fd5ff4447"
   integrity sha512-fqV+xds4jgwFxwWu08b8xDuIoW6/D4/1dtEjZ1sXVeWR7nf0pjj1cHERq4kdkYxsvOGu+rjoR3MbjzpFc4fvSw==
 
-"@stdlib/datasets-cmudict@https://github.com/HexCodeFFF/datasets-cmudict":
-  version "0.0.8"
-  resolved "https://github.com/HexCodeFFF/datasets-cmudict#e43d8043d118a329e7254c16154d06a329aa0b81"
-  dependencies:
-    "@stdlib/assert-has-own-property" "^0.0.x"
-    "@stdlib/assert-is-plain-object" "^0.0.x"
-    "@stdlib/assert-is-string" "^0.0.x"
-    "@stdlib/cli-ctor" "^0.0.x"
-    "@stdlib/fs-read-file" "^0.0.x"
-    "@stdlib/fs-read-json" "^0.0.x"
-    "@stdlib/streams-node-stdout" "^0.0.x"
-    "@stdlib/utils-copy" "^0.0.x"
-    "@stdlib/utils-index-of" "^0.0.x"
-    "@stdlib/utils-keys" "^0.0.x"
-
 "@stdlib/fs-exists@^0.0.x":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@stdlib/fs-exists/-/fs-exists-0.0.8.tgz#391b2cee3e014a3b20266e5d047847f68ef82331"
@@ -2803,6 +2788,21 @@ clone-deep@^4.0.1:
     is-plain-object "^2.0.4"
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
+
+"cmudict@https://github.com/HexCodeFFF/datasets-cmudict":
+  version "0.0.8"
+  resolved "https://github.com/HexCodeFFF/datasets-cmudict#57c9ad7adce05bc477bb48eba029a2be9f924e0d"
+  dependencies:
+    "@stdlib/assert-has-own-property" "^0.0.x"
+    "@stdlib/assert-is-plain-object" "^0.0.x"
+    "@stdlib/assert-is-string" "^0.0.x"
+    "@stdlib/cli-ctor" "^0.0.x"
+    "@stdlib/fs-read-file" "^0.0.x"
+    "@stdlib/fs-read-json" "^0.0.x"
+    "@stdlib/streams-node-stdout" "^0.0.x"
+    "@stdlib/utils-copy" "^0.0.x"
+    "@stdlib/utils-index-of" "^0.0.x"
+    "@stdlib/utils-keys" "^0.0.x"
 
 collection-visit@^1.0.0:
   version "1.0.0"

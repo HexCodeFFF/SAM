@@ -13,7 +13,7 @@ import {
 } from './constants.es6'
 
 const {ToWords} = require('to-words');
-const cmudict = require('@stdlib/datasets-cmudict')();
+const cmudict = require('cmudict')();
 
 /**
  * Test if the char matches against the flags in the reciter table.

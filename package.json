@@ -23,7 +23,7 @@
     "test-browser2": "karma start --single-run"
   },
   "dependencies": {
-    "@stdlib/datasets-cmudict": "https://github.com/HexCodeFFF/datasets-cmudict",
+    "cmudict": "https://github.com/HexCodeFFF/datasets-cmudict",
     "to-words": "^3.1.0"
   },
   "devDependencies": {
